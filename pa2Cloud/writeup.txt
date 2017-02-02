@@ -1,0 +1,35 @@
+Web service works – API returns query suggestions in JSON (fast!)
+Client-side AJAX & modify DOM to show retrieved query suggestions
+Web service written in C# – C# best practices!
+Query suggestion web service runs on Azure
+
+This started with downloading the wiki data then wrote a console app
+to remove any unwanted data, such as titles with any special characters.
+I uploaded the cleaned wiki data to my created blob using azure cloud 
+storage. I created a web servie project containing three main parts being
+the ASMX file and the C# trie class and the node class. I implimented 3 main 
+web methods in the AMSX file, downloadWiki, buildTrie, and searchTrie. All
+methods held return values for checking and error handling. The downloadWiki
+method gets the wiki data on my cloud storage account and downloads the file
+to a temp path on the compute and returns an indication is it was successful.
+The buildTrie method takes that path the wiki file was downloaded to and iterates
+each line in the data and passes it to a sub method in my Trie class. It also 
+checks to see the memory proccess of the system or service being used to stop
+the building of the trie structure if excceds the given limit. The serperate 
+Trie class then calls AddTitle method loops through the given line to add 
+characters into appropriate dictionaries and sets the last character of the 
+leaf node to true. The searchTrie web method takes in an input from the index.html
+and trims and lowercases the given string and passes it to a sub method 
+SearchForPrefix in the Trie class to search if any words match. This will pass
+into helper method in the Trie class, GetWord to help traverse the trie structure
+in a recursive way returning an list. It will return a list containing up to 10 strings
+to the searchTrie method so it can convert the return string to a JSON format.
+I also added a javascript file to see when the when the user types or changes thier
+input in the search bar and sending an ajax request to the searchTrie method and 
+proccessing the returned value. After the request was successfull the it sends the
+stringifyed data to the helper method called display and formats the data recieved
+into the perfered html format and appends it to the results section to display on
+the webpage. If no search query was found it will append 'no suggestions found' for
+an instantaneous feedback displayed to the user. Also for each keyup or changes to
+the search bar before the AJAX request it will delete any results that were previously
+appended and update the new results to append.
