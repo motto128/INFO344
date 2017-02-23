@@ -1,0 +1,23 @@
+In this Assignment I used Azure tables and Queues in order to communicate
+between the worker and web roles in my cloud service to crawl CNN and Bleacher Report
+main site. The Web Role adds messages to queues adn the robot.txt message for 
+the worker role to read. The Worker Role reads the robot.txt file to add sitemaps and 
+urls to the appropriate queues. Furthermore, the second method is reading a XML file 
+when a message exists in the sitemap queue. I used XElement for the Worker Role to read 
+the items in a XML file to add messages to either the sitemap queue or the url queue. 
+Once the Worker Role reads through all sitemaps, it moves on to the third method, crawling.
+To crawl the entire CNN and Bleacherreport domain, the Worker Role has to continuously 
+check for new messages in the url queue. Once it reads a message, it begins to parse 
+the url message. I used the HTML Agility Pack to gather all links on the each web page.
+The URL’s themselves are stored in an Azure Table, along with a counter that keeps 
+track of how many have been inserted. These URL’s are inserted using a class where the 
+partition key is the MD5 representation of the URL, and the row key is the URL without 
+any special characters made using a regular expression.The CPU usage and RAM is also 
+stored in a separate table as a class. The dashboard is displayed on the index.html 
+file calling from a serperate javascript file using AJAX to recieve information that 
+has been successfully stored in the queues and tables. The dashboard displays the 
+current status of the Worker Role, the CPU usage, the MB of RAM available, the number 
+of urls crawled, the number of urls in the url table, and the size of the url queue.
+My code for the Web Role and Worker Role is written in C# OOP by setting all my 
+variables to private. I store my table entities in a library class to allow the 
+Web Role and Worker Role to access the same classes without redundancy.
